@@ -66,7 +66,7 @@ export default class ListCompanies extends Component {
         } = await api.post('/empresa/', {
           ...newRow,
         });
-        this.setState({ empresas: dados }, () => {
+        this.setState({ empresas: [...this.state.empresas, dados] }, () => {
           sendAlert(1, mensagem);
           resolve();
         });
