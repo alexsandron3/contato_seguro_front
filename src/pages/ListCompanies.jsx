@@ -30,6 +30,8 @@ export default class ListCompanies extends Component {
   constructor(props) {
     super(props);
     this.listAllCompanies = this.listAllCompanies.bind(this);
+    this.newCompany = this.newCompany.bind(this);
+    this.editCompany = this.editCompany.bind(this);
     this.state = {
       empresas: [
         {
@@ -41,6 +43,9 @@ export default class ListCompanies extends Component {
       ],
     };
   }
+  componentDidMount() {
+    this.listAllCompanies();
+  }
   async listAllCompanies() {
     try {
       const {
@@ -51,9 +56,6 @@ export default class ListCompanies extends Component {
       console.log(error);
     }
   }
-  componentDidMount() {
-    this.listAllCompanies();
-  }
   async newCompany(newRow, resolve, reject) {
     const isNewRowValid = validateCompanyData(newRow);
     if (isNewRowValid) {
@@ -63,27 +65,25 @@ export default class ListCompanies extends Component {
         } = await api.post('/empresa/', {
           ...newRow,
         });
-        this.setState({ empresas: dados });
-
-        sendAlert(1, mensagem);
+        this.setState({ empresas: dados }, () => {
+          sendAlert(1, mensagem);
+          resolve();
+        });
       } catch (error) {
         sendAlert(0, error.response.data.mensagem);
+        resolve();
       }
     }
-    resolve();
   }
-
   async editCompany(newRow, resolve, reject) {
     const isNewRowValid = validateCompanyData(newRow);
     if (isNewRowValid) {
       try {
         const {
-          data: { mensagem, dados },
+          data: { mensagem },
         } = await api.put(`/empresa/id.php/${newRow.id}`, {
           ...newRow,
         });
-        this.setState({ empresas: dados });
-
         sendAlert(1, mensagem);
         resolve();
       } catch (error) {
