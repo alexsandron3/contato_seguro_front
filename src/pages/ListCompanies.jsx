@@ -70,6 +70,24 @@ export default class ListCompanies extends Component {
     }
     resolve();
   }
+
+  async editCompany(newRow, resolve, reject) {
+    const isNewRowValid = validateCompanyData(newRow);
+    if (isNewRowValid) {
+      try {
+        const {
+          data: { mensagem },
+        } = await api.put(`/empresa/id.php/${newRow.id}`, {
+          ...newRow,
+        });
+        sendAlert(1, mensagem);
+        resolve();
+      } catch (error) {
+        sendAlert(0, error.response.data.mensagem);
+        resolve();
+      }
+    }
+  }
   render() {
     return (
       <Grid
@@ -86,8 +104,9 @@ export default class ListCompanies extends Component {
               columns={companyColumns}
               data={this.state.empresas}
               title="Lista de empresas"
-              onAdd={this.newCompany}
-              setTableData={this.newCompany}
+              addRow={this.newCompany}
+              editRow={this.editCompany}
+              deleteRow={this.deleteCompany}
             />
           </Content>
         </Grid>

@@ -11,12 +11,14 @@ export default class Table extends Component {
   }
 
   render() {
-    const { columns, data, title, setTableData } = this.props;
+    const { columns, data, title, addRow, editRow, deleteRow } = this.props;
 
     return (
       <MaterialTable
         components={{
-          Container: (props) => <Paper {...props} elevation={0} style={{padding: 10}}/>,
+          Container: (props) => (
+            <Paper {...props} elevation={0} style={{ padding: 10 }} />
+          ),
         }}
         columns={columns}
         data={data}
@@ -25,7 +27,15 @@ export default class Table extends Component {
         editable={{
           onRowAdd: (newRow) =>
             new Promise((resolve, reject) => {
-              setTableData(newRow, resolve, reject);
+              addRow(newRow, resolve, reject);
+            }),
+          onRowUpdate: (newRow) =>
+            new Promise((resolve, reject) => {
+              editRow(newRow, resolve, reject);
+            }),
+          onRowDelete: (newRow) =>
+            new Promise((resolve, reject) => {
+              deleteRow(newRow, resolve, reject);
             }),
         }}
         options={{
