@@ -32,6 +32,7 @@ export default class ListCompanies extends Component {
     this.listAllCompanies = this.listAllCompanies.bind(this);
     this.newCompany = this.newCompany.bind(this);
     this.editCompany = this.editCompany.bind(this);
+    this.deleteCompany = this.deleteCompany.bind(this);
     this.state = {
       empresas: [
         {
@@ -90,6 +91,23 @@ export default class ListCompanies extends Component {
         sendAlert(0, error.response.data.mensagem);
         resolve();
       }
+    }
+  }
+  async deleteCompany(deletedRow, resolve, reject) {
+    try {
+      const {
+        data: { mensagem },
+      } = await api.delete(`/empresa/id.php/${deletedRow.id}`);
+      this.setState({
+        empresas: this.state.empresas.filter(
+          (empresa) => empresa.id !== deletedRow.id,
+        ),
+      });
+      sendAlert(1, mensagem);
+      resolve();
+    } catch (error) {
+      sendAlert(0, error.response.data.mensagem);
+      resolve();
     }
   }
   render() {
