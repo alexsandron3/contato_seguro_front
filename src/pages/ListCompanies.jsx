@@ -59,10 +59,12 @@ export default class ListCompanies extends Component {
     if (isNewRowValid) {
       try {
         const {
-          data: { mensagem },
+          data: { mensagem, dados },
         } = await api.post('/empresa/', {
           ...newRow,
         });
+        this.setState({ empresas: dados });
+
         sendAlert(1, mensagem);
       } catch (error) {
         sendAlert(0, error.response.data.mensagem);
@@ -76,10 +78,12 @@ export default class ListCompanies extends Component {
     if (isNewRowValid) {
       try {
         const {
-          data: { mensagem },
+          data: { mensagem, dados },
         } = await api.put(`/empresa/id.php/${newRow.id}`, {
           ...newRow,
         });
+        this.setState({ empresas: dados });
+
         sendAlert(1, mensagem);
         resolve();
       } catch (error) {
