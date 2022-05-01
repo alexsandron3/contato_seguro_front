@@ -10,7 +10,7 @@ export default class Table extends Component {
   }
 
   render() {
-    const { columns, data, title } = this.props;
+    const { columns, data, title, setTableData } = this.props;
 
     return (
       <MaterialTable
@@ -18,6 +18,16 @@ export default class Table extends Component {
         data={data}
         title={title}
         localization={localization}
+        editable={{
+          onRowAdd: (newRow) =>
+            new Promise((resolve, reject) => {
+              setTableData(newRow, resolve, reject);
+            }),
+        }}
+        options={{
+          addRowPosition: 'first',
+          actionsColumnIndex: -1,
+        }}
       />
     );
   }
