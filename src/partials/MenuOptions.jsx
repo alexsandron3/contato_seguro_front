@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -13,27 +14,33 @@ export default class MenuOptions extends Component {
   render() {
     return (
       <>
-        <ListItem button>
-          <ListItemIcon sx={{ p: 1, ml: 3 }}>
-            <HomeOutlined />
-          </ListItemIcon>
-          <ListItemText primary={'Início'} />
-        </ListItem>
+        <Link to="/">
+          <ListItem button>
+            <ListItemIcon sx={{ p: 1, ml: 3 }}>
+              <HomeOutlined />
+            </ListItemIcon>
+            <ListItemText primary={'Início'} />
+          </ListItem>
+        </Link>
         <Divider />
 
-        <ListItem button>
-          <ListItemIcon sx={{ p: 1, ml: 3 }}>
-            <ApartmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Empresas" sx={{ marginLeft: 1 }} />
-        </ListItem>
+        <Link to="/empresas">
+          <ListItem button>
+            <ListItemIcon sx={{ p: 1, ml: 3 }}>
+              <ApartmentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Empresas" sx={{ marginLeft: 1 }} />
+          </ListItem>
+        </Link>
         <Divider />
-        <ListItem button>
-          <ListItemIcon sx={{ p: 1, ml: 3 }}>
-            <GroupIcon />
-          </ListItemIcon>
-          <ListItemText primary="Usuários" />
-        </ListItem>
+        <Link to="/usuarios">
+          <ListItem button>
+            <ListItemIcon sx={{ p: 1, ml: 3 }}>
+              <GroupIcon />
+            </ListItemIcon>
+            <ListItemText primary="Usuários" />
+          </ListItem>
+        </Link>
       </>
     );
   }
