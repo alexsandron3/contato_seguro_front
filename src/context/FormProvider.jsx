@@ -6,6 +6,7 @@ export class FormProvider extends Component {
   constructor(props) {
     super(props);
     this.setDialogOpen = this.setDialogOpen.bind(this);
+    this.setOpenConfirmationDialog = this.setOpenConfirmationDialog.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.clearFormData = this.clearFormData.bind(this);
     this.handleSelectedCompanies = this.handleSelectedCompanies.bind(this);
@@ -31,6 +32,7 @@ export class FormProvider extends Component {
       ],
       selectedValues: {},
       openDialog: false,
+      openDeleteDialog: false,
       action: 'newUser',
     };
   }
@@ -49,6 +51,14 @@ export class FormProvider extends Component {
         action,
       });
     }
+  }
+  setOpenConfirmationDialog(selectedValues) {
+    this.setState({
+      ...this.state,
+      openDeleteDialog: !this.state.openDeleteDialog,
+      action: 'deleteRegistry',
+      selectedValues,
+    });
   }
   handleChange(event) {
     const { target } = event;
@@ -90,6 +100,7 @@ export class FormProvider extends Component {
           clearFormData: this.clearFormData,
           handleSelectedCompanies: this.handleSelectedCompanies,
           setState: this.setFormState,
+          setOpenConfirmationDialog: this.setOpenConfirmationDialog,
         }}
       >
         {this.props.children}
