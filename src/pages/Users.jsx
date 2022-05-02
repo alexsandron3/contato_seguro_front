@@ -1,7 +1,7 @@
 import { Chip, Grid } from '@mui/material';
 import React, { Component } from 'react';
 import Content from '../components/Content';
-import Dialog from '../components/Dialog';
+import FormDialog from '../components/FormDialog';
 import Table from '../components/Table';
 import api from '../services/api';
 import { editUser, newUser } from '../services/user';
@@ -57,6 +57,7 @@ export default class Users extends Component {
     this.newUser = this.newUser.bind(this);
     this.editUser = this.editUser.bind(this);
     this.clearFormData = this.clearFormData.bind(this);
+    this.handleSelectedCompanies = this.handleSelectedCompanies.bind(this);
     this.state = {
       usuarios: [
         {
@@ -166,11 +167,13 @@ export default class Users extends Component {
 
   async editUser() {
     const formData = this.state.selectedValues;
+    console.log(formData);
     delete formData.tableData;
     const arrayOfCompanies = formData.empresas.map(
       (empresa) => empresa.idEmpresa,
     );
     formData.empresas = arrayOfCompanies;
+    return;
     editUser(formData);
   }
   handleChange(event) {
@@ -212,6 +215,20 @@ export default class Users extends Component {
       });
     }
   }
+  handleSelectedCompanies(companies) {
+    const selectedCompanies = companies.filter((company) => company.isChecked);
+    const idOfSelectedCompanies = selectedCompanies.map(
+      (company) => company.id,
+    );
+    this.setState({
+      ...this.state,
+      selectedValues: {
+        ...this.state.selectedValues,
+        empresas: idOfSelectedCompanies,
+      },
+    });
+    console.log(selectedCompanies, idOfSelectedCompanies);
+  }
   render() {
     return (
       <Grid
@@ -234,13 +251,14 @@ export default class Users extends Component {
             />
           </Content>
         </Grid>
-        <Dialog
+        <FormDialog
           open={this.state.openDialog}
           setDialogOpen={this.setDialogOpen}
           formValues={this.state.selectedValues}
           handleChange={this.handleChange}
           action={this.state.action}
           clearFormData={this.clearFormData}
+          handleSelectedCompanies={this.handleSelectedCompanies}
         />
       </Grid>
     );

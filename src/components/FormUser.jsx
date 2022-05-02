@@ -1,6 +1,7 @@
 import { TextField, DialogContent, DialogActions, Button } from '@mui/material';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import CompaniesCheckbox from './CompaniesCheckbox';
 
 export default class FormUser extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class FormUser extends Component {
         telefone = '',
         dataNascimento = '',
         cidadeNascimento = '',
+        empresas = [],
       },
     } = this.props;
     return (
@@ -74,6 +76,10 @@ export default class FormUser extends Component {
             variant="standard"
             value={cidadeNascimento}
             onChange={this.props.handleChange}
+          />
+          <CompaniesCheckbox
+            selectedCompanies={empresas}
+            handleSelectedCompanies={this.props.handleSelectedCompanies}
           />
         </DialogContent>
 
