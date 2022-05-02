@@ -34,19 +34,25 @@ export class FormProvider extends Component {
       action: 'newUser',
     };
   }
-  setDialogOpen(isActionToNewUser, rowData, action) {
-    if (!isActionToNewUser) {
+  setDialogOpen(actionType, rowData, action) {
+    if (actionType === 'edit') {
       this.setState({
         ...this.state,
         selectedValues: rowData,
         openDialog: !this.state.openDialog,
         action: 'editRegistry',
       });
-    } else {
+    } else if (actionType === 'new') {
       this.setState({
         ...this.state,
         openDialog: !this.state.openDialog,
         action: 'newRegistry',
+      });
+    } else if (actionType === 'delete') {
+      this.setState({
+        ...this.state,
+        openDialog: !this.state.openDialog,
+        action: 'deleteRegistry',
       });
     }
   }
