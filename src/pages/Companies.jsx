@@ -26,7 +26,7 @@ export const companyColumns = [
   },
 ];
 
-export default class ListCompanies extends Component {
+export default class Companies extends Component {
   constructor(props) {
     super(props);
     this.listAllCompanies = this.listAllCompanies.bind(this);
