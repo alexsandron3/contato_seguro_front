@@ -8,9 +8,19 @@ export default class FormUser extends Component {
 
     this.state = {};
   }
+  componentWillUnmount() {
+    this.props.clearFormData();
+  }
   render() {
-    const { formValues } = this.props;
-
+    const {
+      formValues: {
+        nome = '',
+        email = '',
+        telefone = '',
+        dataNascimento = '',
+        cidadeNascimento = '',
+      },
+    } = this.props;
     return (
       <>
         <DialogContent>
@@ -21,7 +31,7 @@ export default class FormUser extends Component {
             label="Nome"
             fullWidth
             variant="standard"
-            value={formValues.nome}
+            value={nome}
             onChange={this.props.handleChange}
           />
           <TextField
@@ -32,7 +42,7 @@ export default class FormUser extends Component {
             type="email"
             fullWidth
             variant="standard"
-            value={formValues.email}
+            value={email}
             onChange={this.props.handleChange}
           />
           <TextField
@@ -42,7 +52,7 @@ export default class FormUser extends Component {
             label="Telefone"
             fullWidth
             variant="standard"
-            value={formValues.telefone}
+            value={telefone}
             onChange={this.props.handleChange}
           />
           <TextField
@@ -52,7 +62,7 @@ export default class FormUser extends Component {
             type="date"
             fullWidth
             variant="standard"
-            value={formValues.dataNascimento}
+            value={dataNascimento}
             onChange={this.props.handleChange}
           />
           <TextField
@@ -62,7 +72,7 @@ export default class FormUser extends Component {
             label="Cidade de nascimento"
             fullWidth
             variant="standard"
-            value={formValues.cidadeNascimento}
+            value={cidadeNascimento}
             onChange={this.props.handleChange}
           />
         </DialogContent>
