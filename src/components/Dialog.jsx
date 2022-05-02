@@ -26,6 +26,7 @@ export default class FormDialog extends Component {
             formValues={this.props.formValues}
             newUser={this.props.newUser}
             handleChange={this.props.handleChange}
+            action={this.props.action}
           />
         </Dialog>
       </div>

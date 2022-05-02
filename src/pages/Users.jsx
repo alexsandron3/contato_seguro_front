@@ -4,6 +4,7 @@ import Content from '../components/Content';
 import Dialog from '../components/Dialog';
 import Table from '../components/Table';
 import api from '../services/api';
+import { editUser } from '../services/user';
 import sendAlert from '../utils/sendAlert';
 
 export default class Users extends Component {
@@ -55,6 +56,7 @@ export default class Users extends Component {
     this.setDialogOpen = this.setDialogOpen.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.newUser = this.newUser.bind(this);
+    this.editUser = this.editUser.bind(this);
     this.state = {
       usuarios: [
         {
@@ -166,16 +168,18 @@ export default class Users extends Component {
     // console.log(formData);
     // const isNewRowValid = validateCompanyData(newRow);
     // if (isNewRowValid) {
-    try {
-      const {
-        data: { mensagem, dados },
-      } = await api.post('/usuario/', {
-        ...formData,
-      });
-    } catch (error) {
-      sendAlert(0, error.response.data.mensagem);
-    }
+   
     // }
+  }
+
+  async editUser() {
+    const formData = this.state.selectedValues;
+    delete formData.tableData;
+    const arrayOfCompanies = formData.empresas.map(
+      (empresa) => empresa.idEmpresa,
+    );
+    formData.empresas = arrayOfCompanies;
+    editUser(formData);
   }
   handleChange(event) {
     const { target } = event;
@@ -222,6 +226,7 @@ export default class Users extends Component {
           formValues={this.state.selectedValues}
           newUser={this.newUser}
           handleChange={this.handleChange}
+          action={this.editUser}
         />
       </Grid>
     );

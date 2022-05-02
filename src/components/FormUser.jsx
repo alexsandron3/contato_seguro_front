@@ -68,7 +68,7 @@ export default class FormUser extends Component {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={this.props.newUser}>Enviar</Button>
+          <Button onClick={this.props.action}>Enviar</Button>
           <Button onClick={this.props.setDialogOpen}>Cancelar</Button>
         </DialogActions>
       </>
