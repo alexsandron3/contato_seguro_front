@@ -5,6 +5,7 @@ import FormDialog from '../components/FormDialog';
 import Table from '../components/Table';
 import api from '../services/api';
 import { editUser, newUser } from '../services/user';
+import validateUserData from '../utils/validateUserData';
 
 export default class Users extends Component {
   companyColumns = [
@@ -162,19 +163,41 @@ export default class Users extends Component {
 
   async newUser() {
     const { selectedValues } = this.state;
-    newUser(selectedValues);
+    const { validatedUserData, dataIsValid } = validateUserData(selectedValues);
+    if (dataIsValid) {
+      const isUserCreated = await newUser({
+        user: validatedUserData,
+        showAlert: true,
+      });
+      if (isUserCreated) {
+        this.setState({
+          ...this.state,
+          openDialog: false,
+        });
+        this.listAllUsers();
+        this.clearFormData();
+      }
+    }
   }
 
   async editUser() {
-    const formData = this.state.selectedValues;
-    console.log(formData);
-    delete formData.tableData;
-    const arrayOfCompanies = formData.empresas.map(
-      (empresa) => empresa.idEmpresa,
-    );
-    formData.empresas = arrayOfCompanies;
-    return;
-    editUser(formData);
+    const formData = { ...this.state.selectedValues };
+    const { validatedUserData, dataIsValid } = validateUserData(formData);
+    if (dataIsValid) {
+      const isUserEdited = await editUser({
+        user: validatedUserData,
+        showAlert: true,
+      });
+      if (isUserEdited) {
+        this.setState({
+          ...this.state,
+          openDialog: false,
+        });
+
+        this.listAllUsers();
+        this.clearFormData();
+      }
+    }
   }
   handleChange(event) {
     const { target } = event;
@@ -217,17 +240,13 @@ export default class Users extends Component {
   }
   handleSelectedCompanies(companies) {
     const selectedCompanies = companies.filter((company) => company.isChecked);
-    const idOfSelectedCompanies = selectedCompanies.map(
-      (company) => company.id,
-    );
     this.setState({
       ...this.state,
       selectedValues: {
         ...this.state.selectedValues,
-        empresas: idOfSelectedCompanies,
+        empresas: selectedCompanies,
       },
     });
-    console.log(selectedCompanies, idOfSelectedCompanies);
   }
   render() {
     return (
