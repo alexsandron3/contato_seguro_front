@@ -3,6 +3,7 @@ import { Routes as Router, Route } from 'react-router-dom';
 import Home from '../pages/Home';
 import Companies from '../pages/Companies';
 import Users from '../pages/Users';
+import { FormProvider } from '../context/FormProvider';
 
 export default class Routes extends Component {
   render() {
@@ -11,8 +12,22 @@ export default class Routes extends Component {
         {/*  */}
         {/*  */}
         <Route path="/" element={<Home />} />
-        <Route path="/empresas" element={<Companies />} />
-        <Route path="/usuarios" element={<Users />} />
+        <Route
+          path="/empresas"
+          element={
+            <FormProvider>
+              <Companies />
+            </FormProvider>
+          }
+        />
+        <Route
+          path="/usuarios"
+          element={
+            <FormProvider>
+              <Users />
+            </FormProvider>
+          }
+        />
       </Router>
     );
   }

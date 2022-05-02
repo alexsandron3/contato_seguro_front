@@ -6,6 +6,8 @@ import Table from '../components/Table';
 import api from '../services/api';
 import { editUser, newUser } from '../services/user';
 import validateUserData from '../utils/validateUserData';
+import FormUser from '../components/FormUser';
+import FormContext from '../context/FormProvider';
 
 export default class Users extends Component {
   companyColumns = [
@@ -53,12 +55,8 @@ export default class Users extends Component {
   constructor(props) {
     super(props);
     this.listAllUsers = this.listAllUsers.bind(this);
-    this.setDialogOpen = this.setDialogOpen.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.newUser = this.newUser.bind(this);
     this.editUser = this.editUser.bind(this);
-    this.clearFormData = this.clearFormData.bind(this);
-    this.handleSelectedCompanies = this.handleSelectedCompanies.bind(this);
     this.state = {
       usuarios: [
         {
@@ -70,9 +68,6 @@ export default class Users extends Component {
           empresas: [],
         },
       ],
-      selectedValues: {},
-      openDialog: false,
-      action: this.newUser,
     };
   }
   componentDidMount() {
@@ -162,7 +157,7 @@ export default class Users extends Component {
   }
 
   async newUser() {
-    const { selectedValues } = this.state;
+    const { clearFormData, setState, selectedValues } = this.context;
     const { validatedUserData, dataIsValid } = validateUserData(selectedValues);
     if (dataIsValid) {
       const isUserCreated = await newUser({
@@ -170,18 +165,18 @@ export default class Users extends Component {
         showAlert: true,
       });
       if (isUserCreated) {
-        this.setState({
-          ...this.state,
+        setState({
           openDialog: false,
         });
         this.listAllUsers();
-        this.clearFormData();
+        clearFormData();
       }
     }
   }
 
   async editUser() {
-    const formData = { ...this.state.selectedValues };
+    const { selectedValues, clearFormData, setState } = this.context;
+    const formData = { ...selectedValues };
     const { validatedUserData, dataIsValid } = validateUserData(formData);
     if (dataIsValid) {
       const isUserEdited = await editUser({
@@ -189,66 +184,25 @@ export default class Users extends Component {
         showAlert: true,
       });
       if (isUserEdited) {
-        this.setState({
-          ...this.state,
+        setState({
           openDialog: false,
         });
-
         this.listAllUsers();
-        this.clearFormData();
+        clearFormData();
       }
     }
   }
-  handleChange(event) {
-    const { target } = event;
-    this.setState({
-      ...this.state,
-      selectedValues: {
-        ...this.state.selectedValues,
-        [target.name]: target.value,
-      },
-    });
-  }
-  clearFormData() {
-    this.setState({
-      ...this.state,
-      selectedValues: {
-        email: '',
-        telefone: '',
-        dataNascimento: '',
-        nome: '',
-        cidadeNascimento: '',
-        empresas: [],
-      },
-    });
-  }
-  setDialogOpen(isActionToNewUser, rowData) {
-    if (!isActionToNewUser) {
-      this.setState({
-        ...this.state,
-        selectedValues: rowData,
-        openDialog: !this.state.openDialog,
-        action: this.editUser,
-      });
-    } else {
-      this.setState({
-        ...this.state,
-        openDialog: !this.state.openDialog,
-        action: this.newUser,
-      });
-    }
-  }
-  handleSelectedCompanies(companies) {
-    const selectedCompanies = companies.filter((company) => company.isChecked);
-    this.setState({
-      ...this.state,
-      selectedValues: {
-        ...this.state.selectedValues,
-        empresas: selectedCompanies,
-      },
-    });
-  }
+
   render() {
+    const {
+      openDialog,
+      setDialogOpen,
+      handleChange,
+      clearFormData,
+      handleSelectedCompanies,
+      selectedValues,
+      action,
+    } = this.context;
     return (
       <Grid
         container
@@ -259,27 +213,29 @@ export default class Users extends Component {
         minHeight="100vh"
       >
         <Grid item xs={8}>
-          <Content title="usuarios">
+          <Content title="Usuários">
             <Table
               columns={this.companyColumns}
               data={this.state.usuarios}
               title="Lista de usuarios"
-              openForm={this.setDialogOpen}
+              openForm={setDialogOpen}
               editRow={this.editUser}
-              deleteRow={this.deleteUser}
             />
           </Content>
         </Grid>
         <FormDialog
-          open={this.state.openDialog}
-          setDialogOpen={this.setDialogOpen}
-          formValues={this.state.selectedValues}
-          handleChange={this.handleChange}
-          action={this.state.action}
-          clearFormData={this.clearFormData}
-          handleSelectedCompanies={this.handleSelectedCompanies}
+          open={openDialog}
+          setDialogOpen={setDialogOpen}
+          formValues={selectedValues}
+          handleChange={handleChange}
+          action={this[action]}
+          clearFormData={clearFormData}
+          handleSelectedCompanies={handleSelectedCompanies}
+          Form={FormUser}
         />
       </Grid>
     );
   }
 }
+
+Users.contextType = FormContext;
