@@ -5,6 +5,10 @@ import Table from '../components/Table';
 import api from '../services/api';
 import sendAlert from '../utils/sendAlert';
 import validateCompanyData from '../utils/validateCompanyData';
+import FormContext from '../context/FormProvider';
+import FormDialog from '../components/FormDialog';
+import FormCompany from '../components/FormCompany';
+import { editCompany, newCompany } from '../services/company';
 
 export const companyColumns = [
   {
@@ -30,9 +34,9 @@ export default class Companies extends Component {
   constructor(props) {
     super(props);
     this.listAllCompanies = this.listAllCompanies.bind(this);
-    this.newCompany = this.newCompany.bind(this);
-    this.editCompany = this.editCompany.bind(this);
-    this.deleteCompany = this.deleteCompany.bind(this);
+    this.newRegistry = this.newRegistry.bind(this);
+    this.editRegistry = this.editRegistry.bind(this);
+    this.deleteRegistry = this.deleteRegistry.bind(this);
     this.state = {
       empresas: [
         {
@@ -52,48 +56,48 @@ export default class Companies extends Component {
       const {
         data: { dados },
       } = await api.get('/empresa/');
-      this.setState({ empresas: dados });
+      this.setState({ empresas: dados }, () => {
+        console.log(this.state.empresas);
+      });
     } catch (error) {
       console.log(error);
     }
   }
-  async newCompany(newRow, resolve, reject) {
-    const isNewRowValid = validateCompanyData(newRow);
-    if (isNewRowValid) {
-      try {
-        const {
-          data: { mensagem, dados },
-        } = await api.post('/empresa/', {
-          ...newRow,
+  async newRegistry() {
+    const { clearFormData, setState, selectedValues } = this.context;
+    const isDataValid = validateCompanyData(selectedValues);
+    if (isDataValid) {
+      const isCompanyCreated = await newCompany({
+        company: selectedValues,
+        showAlert: true,
+      });
+      if (isCompanyCreated) {
+        setState({
+          openDialog: false,
         });
-        this.setState({ empresas: [...this.state.empresas, dados] }, () => {
-          sendAlert(1, mensagem);
-          resolve();
-        });
-      } catch (error) {
-        sendAlert(0, error.response.data.mensagem);
-        resolve();
+        await this.listAllCompanies();
+        clearFormData();
       }
     }
   }
-  async editCompany(newRow, resolve, reject) {
-    const isNewRowValid = validateCompanyData(newRow);
-    if (isNewRowValid) {
-      try {
-        const {
-          data: { mensagem },
-        } = await api.put(`/empresa/id.php/${newRow.id}`, {
-          ...newRow,
+  async editRegistry() {
+    const { clearFormData, setState, selectedValues } = this.context;
+    const isDataValid = validateCompanyData(selectedValues);
+    if (isDataValid) {
+      const isCompanyCreated = await editCompany({
+        company: selectedValues,
+        showAlert: true,
+      });
+      if (isCompanyCreated) {
+        setState({
+          openDialog: false,
         });
-        sendAlert(1, mensagem);
-        resolve();
-      } catch (error) {
-        sendAlert(0, error.response.data.mensagem);
-        resolve();
+        await this.listAllCompanies();
+        clearFormData();
       }
     }
   }
-  async deleteCompany(deletedRow, resolve, reject) {
+  async deleteRegistry(deletedRow, resolve, reject) {
     try {
       const {
         data: { mensagem },
@@ -111,6 +115,15 @@ export default class Companies extends Component {
     }
   }
   render() {
+    const {
+      openDialog,
+      setDialogOpen,
+      handleChange,
+      clearFormData,
+      handleSelectedCompanies,
+      selectedValues,
+      action,
+    } = this.context;
     return (
       <Grid
         container
@@ -126,13 +139,22 @@ export default class Companies extends Component {
               columns={companyColumns}
               data={this.state.empresas}
               title="Lista de empresas"
-              addRow={this.newCompany}
-              editRow={this.editCompany}
-              deleteRow={this.deleteCompany}
+              openForm={setDialogOpen}
             />
           </Content>
         </Grid>
+        <FormDialog
+          open={openDialog}
+          setDialogOpen={setDialogOpen}
+          formValues={selectedValues}
+          handleChange={handleChange}
+          action={this[action]}
+          clearFormData={clearFormData}
+          handleSelectedCompanies={handleSelectedCompanies}
+          Form={FormCompany}
+        />
       </Grid>
     );
   }
 }
+Companies.contextType = FormContext;
