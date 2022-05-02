@@ -18,6 +18,7 @@ export default class Topbar extends Component {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
+              onClick={() => this.props.toggleDrawer(true)}
             >
               <MenuIcon />
             </IconButton>
