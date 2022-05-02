@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Routes as Router, Route } from 'react-router-dom';
 import Home from '../pages/Home';
-import ListCompanies from '../pages/ListCompanies';
+import Companies from '../pages/Companies';
+import Users from '../pages/Users';
 
 export default class Routes extends Component {
   render() {
@@ -10,7 +11,8 @@ export default class Routes extends Component {
         {/*  */}
         {/*  */}
         <Route path="/" element={<Home />} />
-        <Route path="/empresas" element={<ListCompanies />} />
+        <Route path="/empresas" element={<Companies />} />
+        <Route path="/usuarios" element={<Users />} />
       </Router>
     );
   }
