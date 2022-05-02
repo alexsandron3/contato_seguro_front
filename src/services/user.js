@@ -1,30 +1,31 @@
 import sendAlert from '../utils/sendAlert';
 import api from './api';
 
-export async function editUser(user = {}) {
+export async function editUser({ user, showAlert }) {
   try {
     const {
       data: { mensagem },
-    } = await api.post(`/usuario/id.php/${user.id}`, {
+    } = await api.put(`/usuario/id.php/${user.id}`, {
       ...user,
     });
-    sendAlert(1, mensagem);
+    if (showAlert) sendAlert(1, mensagem);
+    return true;
   } catch (error) {
-    sendAlert(0, error.response.data.mensagem);
+    if (showAlert) sendAlert(0, error.response.data.mensagem);
+    return false;
   }
 }
-export async function newUser(user = {}) {
-  // console.log(user);
-  // return;
+export async function newUser({ user, showAlert }) {
   try {
     const {
       data: { mensagem },
     } = await api.post('/usuario/', {
       ...user,
-      empresas: [4],
     });
-    sendAlert(1, mensagem);
+    if (showAlert) sendAlert(1, mensagem);
+    return true;
   } catch (error) {
-    sendAlert(0, error.response.data.mensagem);
+    if (showAlert) sendAlert(0, error.response.data.mensagem);
+    return false;
   }
 }
