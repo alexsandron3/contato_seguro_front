@@ -33,20 +33,20 @@ export default class Table extends Component {
         actions={[
           {
             icon: () => <EditIcon />,
-            tooltip: 'Novo usuário',
-            onClick: (props, rowData) =>
-              this.props.openForm('newRegistry', rowData),
+            tooltip: 'Editar registro',
+            onClick: (props, rowData) => this.props.openForm('editRegistry'),
           },
           {
             icon: () => <DeleteIcon />,
             tooltip: 'Deletar registro',
-            onClick: (event) => this.props.openForm('deleteRegistry'),
+            onClick: (props, rowData) =>
+              this.props.setOpenConfirmationDialog(rowData),
           },
           {
             icon: () => <AddIcon />,
             tooltip: 'Novo registro',
             isFreeAction: true,
-            onClick: (event) => this.props.openForm('editRegistry'),
+            onClick: (rowData) => this.props.openForm('newRegistry', rowData),
           },
         ]}
       />
