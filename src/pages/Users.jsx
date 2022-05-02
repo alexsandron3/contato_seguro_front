@@ -55,8 +55,8 @@ export default class Users extends Component {
   constructor(props) {
     super(props);
     this.listAllUsers = this.listAllUsers.bind(this);
-    this.newUser = this.newUser.bind(this);
-    this.editUser = this.editUser.bind(this);
+    this.newRegistry = this.newRegistry.bind(this);
+    this.editRegistry = this.editRegistry.bind(this);
     this.state = {
       usuarios: [
         {
@@ -156,7 +156,7 @@ export default class Users extends Component {
     }
   }
 
-  async newUser() {
+  async newRegistry() {
     const { clearFormData, setState, selectedValues } = this.context;
     const { validatedUserData, dataIsValid } = validateUserData(selectedValues);
     if (dataIsValid) {
@@ -168,13 +168,13 @@ export default class Users extends Component {
         setState({
           openDialog: false,
         });
-        this.listAllUsers();
+        await this.listAllUsers();
         clearFormData();
       }
     }
   }
 
-  async editUser() {
+  async editRegistry() {
     const { selectedValues, clearFormData, setState } = this.context;
     const formData = { ...selectedValues };
     const { validatedUserData, dataIsValid } = validateUserData(formData);
@@ -187,7 +187,7 @@ export default class Users extends Component {
         setState({
           openDialog: false,
         });
-        this.listAllUsers();
+        await this.listAllUsers();
         clearFormData();
       }
     }
@@ -219,7 +219,7 @@ export default class Users extends Component {
               data={this.state.usuarios}
               title="Lista de usuarios"
               openForm={setDialogOpen}
-              editRow={this.editUser}
+              editRow={this.editRegistry}
             />
           </Content>
         </Grid>
