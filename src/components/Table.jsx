@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import localization from '../utils/materialTableLocalization';
 import { Paper } from '@material-ui/core';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 export default class Table extends Component {
   constructor(props) {
     super(props);
@@ -11,7 +12,7 @@ export default class Table extends Component {
     this.state = {};
   }
   render() {
-    const { columns, data, title, openForm, deleteRow } = this.props;
+    const { columns, data, title, openForm } = this.props;
     return (
       <MaterialTable
         components={{
@@ -32,7 +33,13 @@ export default class Table extends Component {
           {
             icon: () => <EditIcon />,
             tooltip: 'Novo usuário',
-            onClick: (props, rowData) => this.props.openForm(rowData),
+            onClick: (props, rowData) => this.props.openForm(false, rowData),
+          },
+          {
+            icon: () => <AddIcon />,
+            tooltip: 'Novo registro',
+            isFreeAction: true,
+            onClick: (event) => this.props.openForm(true),
           },
         ]}
       />
