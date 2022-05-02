@@ -1,8 +1,10 @@
 import { Chip, Grid } from '@mui/material';
 import React, { Component } from 'react';
 import Content from '../components/Content';
+import Dialog from '../components/Dialog';
 import Table from '../components/Table';
 import api from '../services/api';
+import sendAlert from '../utils/sendAlert';
 
 export default class Users extends Component {
   companyColumns = [
@@ -50,6 +52,9 @@ export default class Users extends Component {
   constructor(props) {
     super(props);
     this.listAllUsers = this.listAllUsers.bind(this);
+    this.setDialogOpen = this.setDialogOpen.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.newUser = this.newUser.bind(this);
     this.state = {
       usuarios: [
         {
@@ -150,6 +155,45 @@ export default class Users extends Component {
       console.log(error);
     }
   }
+
+  async newUser() {
+    const formData = this.state.selectedValues;
+    delete formData.tableData;
+    const arrayOfCompanies = formData.empresas.map(
+      (empresa) => empresa.idEmpresa,
+    );
+    formData.empresas = arrayOfCompanies;
+    // console.log(formData);
+    // const isNewRowValid = validateCompanyData(newRow);
+    // if (isNewRowValid) {
+    try {
+      const {
+        data: { mensagem, dados },
+      } = await api.post('/usuario/', {
+        ...formData,
+      });
+    } catch (error) {
+      sendAlert(0, error.response.data.mensagem);
+    }
+    // }
+  }
+  handleChange(event) {
+    const { target } = event;
+    this.setState({
+      ...this.state,
+      selectedValues: {
+        ...this.state.selectedValues,
+        [target.name]: target.value,
+      },
+    });
+  }
+  setDialogOpen(rowData) {
+    this.setState({
+      ...this.state,
+      selectedValues: rowData,
+      openDialog: !this.state.openDialog,
+    });
+  }
   render() {
     return (
       <Grid
@@ -172,6 +216,13 @@ export default class Users extends Component {
             />
           </Content>
         </Grid>
+        <Dialog
+          open={this.state.openDialog}
+          setDialogOpen={this.setDialogOpen}
+          formValues={this.state.selectedValues}
+          newUser={this.newUser}
+          handleChange={this.handleChange}
+        />
       </Grid>
     );
   }
