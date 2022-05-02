@@ -4,8 +4,7 @@ import Content from '../components/Content';
 import Dialog from '../components/Dialog';
 import Table from '../components/Table';
 import api from '../services/api';
-import { editUser } from '../services/user';
-import sendAlert from '../utils/sendAlert';
+import { editUser, newUser } from '../services/user';
 
 export default class Users extends Component {
   companyColumns = [
@@ -57,6 +56,7 @@ export default class Users extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.newUser = this.newUser.bind(this);
     this.editUser = this.editUser.bind(this);
+    this.clearFormData = this.clearFormData.bind(this);
     this.state = {
       usuarios: [
         {
@@ -70,6 +70,7 @@ export default class Users extends Component {
       ],
       selectedValues: {},
       openDialog: false,
+      action: this.newUser,
     };
   }
   componentDidMount() {
@@ -159,17 +160,8 @@ export default class Users extends Component {
   }
 
   async newUser() {
-    const formData = this.state.selectedValues;
-    delete formData.tableData;
-    const arrayOfCompanies = formData.empresas.map(
-      (empresa) => empresa.idEmpresa,
-    );
-    formData.empresas = arrayOfCompanies;
-    // console.log(formData);
-    // const isNewRowValid = validateCompanyData(newRow);
-    // if (isNewRowValid) {
-   
-    // }
+    const { selectedValues } = this.state;
+    newUser(selectedValues);
   }
 
   async editUser() {
@@ -191,12 +183,34 @@ export default class Users extends Component {
       },
     });
   }
-  setDialogOpen(rowData) {
+  clearFormData() {
     this.setState({
       ...this.state,
-      selectedValues: rowData,
-      openDialog: !this.state.openDialog,
+      selectedValues: {
+        email: '',
+        telefone: '',
+        dataNascimento: '',
+        nome: '',
+        cidadeNascimento: '',
+        empresas: [],
+      },
     });
+  }
+  setDialogOpen(isActionToNewUser, rowData) {
+    if (!isActionToNewUser) {
+      this.setState({
+        ...this.state,
+        selectedValues: rowData,
+        openDialog: !this.state.openDialog,
+        action: this.editUser,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        openDialog: !this.state.openDialog,
+        action: this.newUser,
+      });
+    }
   }
   render() {
     return (
@@ -224,9 +238,9 @@ export default class Users extends Component {
           open={this.state.openDialog}
           setDialogOpen={this.setDialogOpen}
           formValues={this.state.selectedValues}
-          newUser={this.newUser}
           handleChange={this.handleChange}
-          action={this.editUser}
+          action={this.state.action}
+          clearFormData={this.clearFormData}
         />
       </Grid>
     );

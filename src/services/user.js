@@ -14,11 +14,14 @@ export async function editUser(user = {}) {
   }
 }
 export async function newUser(user = {}) {
+  // console.log(user);
+  // return;
   try {
     const {
       data: { mensagem },
-    } = await api.post('/usuario', {
+    } = await api.post('/usuario/', {
       ...user,
+      empresas: [4],
     });
     sendAlert(1, mensagem);
   } catch (error) {
