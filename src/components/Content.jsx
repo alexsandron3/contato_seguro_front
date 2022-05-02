@@ -12,7 +12,7 @@ export default class Content extends Component {
     return (
       <Box p={2}>
         <Paper elevation={3} component="div" sx={{ textAlign: 'center' }}>
-          <Typography variant="h3" component="h3" p={2}>
+          <Typography variant="h3" component="h3" p={2} sx={{mt:4}}>
             {title}
           </Typography>
           {children}
