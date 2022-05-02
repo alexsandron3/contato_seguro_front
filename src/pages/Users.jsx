@@ -4,10 +4,11 @@ import Content from '../components/Content';
 import FormDialog from '../components/FormDialog';
 import Table from '../components/Table';
 import api from '../services/api';
-import { editUser, newUser } from '../services/user';
+import { editUser, newUser, deleteUser } from '../services/user';
 import validateUserData from '../utils/validateUserData';
 import FormUser from '../components/FormUser';
 import FormContext from '../context/FormProvider';
+import ConfirmationDialog from '../components/ConfirmationDialog';
 
 export default class Users extends Component {
   companyColumns = [
@@ -57,6 +58,7 @@ export default class Users extends Component {
     this.listAllUsers = this.listAllUsers.bind(this);
     this.newRegistry = this.newRegistry.bind(this);
     this.editRegistry = this.editRegistry.bind(this);
+    this.deleteRegistry = this.deleteRegistry.bind(this);
     this.state = {
       usuarios: [
         {
@@ -193,6 +195,21 @@ export default class Users extends Component {
     }
   }
 
+  async deleteRegistry() {
+    const { selectedValues, clearFormData, setState } = this.context;
+    const isUserDeleted = await deleteUser({
+      id: selectedValues.id,
+      showAlert: true,
+    });
+    if (isUserDeleted) {
+      setState({
+        openDeleteDialog: false,
+      });
+      await this.listAllUsers();
+      clearFormData();
+    }
+  }
+
   render() {
     const {
       openDialog,
@@ -202,6 +219,8 @@ export default class Users extends Component {
       handleSelectedCompanies,
       selectedValues,
       action,
+      openDeleteDialog,
+      setOpenConfirmationDialog,
     } = this.context;
     return (
       <Grid
@@ -220,6 +239,7 @@ export default class Users extends Component {
               title="Lista de usuarios"
               openForm={setDialogOpen}
               editRow={this.editRegistry}
+              setOpenConfirmationDialog={setOpenConfirmationDialog}
             />
           </Content>
         </Grid>
@@ -232,6 +252,13 @@ export default class Users extends Component {
           clearFormData={clearFormData}
           handleSelectedCompanies={handleSelectedCompanies}
           Form={FormUser}
+        />
+        <ConfirmationDialog
+          title="Você deseja deletar este registro?"
+          text="Ao confirmar, esta operação não poderá ser desfeita"
+          open={openDeleteDialog}
+          setOpen={setOpenConfirmationDialog}
+          action={this[action]}
         />
       </Grid>
     );

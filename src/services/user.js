@@ -29,3 +29,16 @@ export async function newUser({ user, showAlert }) {
     return false;
   }
 }
+
+export async function deleteUser({ showAlert, id }) {
+  try {
+    const {
+      data: { mensagem },
+    } = await api.delete(`/usuario/id.php/${id}`);
+    if (showAlert) sendAlert(1, mensagem);
+    return true;
+  } catch (error) {
+    if (showAlert) sendAlert(0, error.response.data.mensagem);
+    return false;
+  }
+}
