@@ -40,13 +40,13 @@ export class FormProvider extends Component {
         ...this.state,
         selectedValues: rowData,
         openDialog: !this.state.openDialog,
-        action: 'editUser',
+        action: 'editRegistry',
       });
     } else {
       this.setState({
         ...this.state,
         openDialog: !this.state.openDialog,
-        action: 'newUser',
+        action: 'newRegistry',
       });
     }
   }
@@ -61,16 +61,10 @@ export class FormProvider extends Component {
     });
   }
   clearFormData() {
+    console.log('clearFormData');
     this.setState({
       ...this.state,
-      selectedValues: {
-        email: '',
-        telefone: '',
-        dataNascimento: '',
-        nome: '',
-        cidadeNascimento: '',
-        empresas: [],
-      },
+      selectedValues: {},
     });
   }
   handleSelectedCompanies(companies) {
