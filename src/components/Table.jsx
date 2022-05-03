@@ -47,7 +47,7 @@ export default class Table extends Component {
             icon: () => <AddIcon />,
             tooltip: 'Novo registro',
             isFreeAction: true,
-            onClick: (rowData) => this.props.openForm('newRegistry', rowData),
+            onClick: (props, rowData) => this.props.openForm('newRegistry', rowData),
           },
         ]}
       />
