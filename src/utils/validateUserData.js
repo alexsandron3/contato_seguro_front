@@ -21,7 +21,7 @@ export default function validateUserData({
   id,
 }) {
   console.log(empresas);
-  if (!nome || !email || !Array.isArray(empresas)) {
+  if (!nome || !email || !empresas.length) {
     sendAlert(0, 'Por favor, preencha todos os campos!');
     return false;
   }
