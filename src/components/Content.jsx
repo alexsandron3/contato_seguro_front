@@ -10,9 +10,9 @@ export default class Content extends Component {
   render() {
     const { title, children } = this.props;
     return (
-      <Box p={3}>
-        <Paper elevation={1} component="div" sx={{ textAlign: 'center' }}>
-          <Typography variant="h3" component="h3">
+      <Box p={2}>
+        <Paper elevation={3} component="div" sx={{ textAlign: 'center' }}>
+          <Typography variant="h3" component="h3" p={2} sx={{mt:4}}>
             {title}
           </Typography>
           {children}
