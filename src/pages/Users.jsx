@@ -44,7 +44,7 @@ export default class Users extends Component {
         return empresas.map((empresa, index) => (
           <div key={index}>
             <Chip
-              label={empresa.nomeEmpresa}
+              label={empresa.nomeempresas}
               variant="outlined"
               color="primary"
             />
@@ -77,19 +77,13 @@ export default class Users extends Component {
   }
   async listAllUsers() {
     try {
-      const {
-        data: { dados },
-      } = await api.get('/usuario/');
+      const { data } = await api.get('/usuario/');
+      const { dados, adicionais } = data;
 
-      // Verifico se o index do array encontrado é igual ao index atual
-      const usersWithCompanies = dados.filter(
-        (item, index, array) =>
-          index === array.findIndex((t) => t.id === item.id),
-      );
-      const users = dados.reduce((acc, curr, index, array) => {
+      const usersWithCompanies = dados.reduce((acc, curr, index) => {
         const { id, email, telefone, dataNascimento, nome, cidadeNascimento } =
           curr;
-        if (acc[id] !== undefined) {
+        if (acc[id] === undefined) {
           acc[id] = {
             usuario: {
               id,
@@ -99,37 +93,16 @@ export default class Users extends Component {
               nome,
               cidadeNascimento,
             },
-            empresas: [
-              ...acc[id].empresas,
-              {
-                nomeEmpresa: curr.nomeempresas,
-                idEmpresa: curr.idEmpresa,
-              },
-            ],
-          };
-        } else {
-          acc[id] = {
-            usuario: {
-              id,
-              email,
-              telefone,
-              dataNascimento,
-              nome,
-              cidadeNascimento,
-            },
-            empresas: [
-              {
-                nomeEmpresa: curr.nomeempresas,
-                idEmpresa: curr.idEmpresa,
-              },
-            ],
+            empresas: adicionais.filter(
+              (adicional) => adicional.id === curr.id,
+            ),
           };
         }
         return acc;
       }, {});
       let tableData = [];
-      usersWithCompanies.forEach((item1) => {
-        Object.values(users).forEach((item2) => {
+      dados.forEach((item1) => {
+        Object.values(usersWithCompanies).forEach((item2) => {
           const { empresas } = item2;
           const {
             id,
