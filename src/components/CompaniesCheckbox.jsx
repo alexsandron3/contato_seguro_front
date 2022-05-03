@@ -53,7 +53,12 @@ export default class CompaniesCheckbox extends Component {
   render() {
     const { companies } = this.state;
     return (
-      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+      <FormControl
+        sx={{ m: 3 }}
+        component="fieldset"
+        variant="standard"
+        required
+      >
         <FormLabel component="legend">Empresas</FormLabel>
         <FormGroup row>
           {companies.map((company, index) => {
