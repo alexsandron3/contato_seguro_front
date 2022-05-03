@@ -35,6 +35,7 @@ export default class FormUser extends Component {
             variant="standard"
             value={nome}
             onChange={this.props.handleChange}
+            required
           />
           <TextField
             autoFocus
@@ -46,6 +47,7 @@ export default class FormUser extends Component {
             variant="standard"
             value={email}
             onChange={this.props.handleChange}
+            required
           />
           <TextField
             autoFocus
