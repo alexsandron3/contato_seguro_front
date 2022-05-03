@@ -37,16 +37,16 @@ export class FormProvider extends Component {
     };
   }
   setDialogOpen(action, rowData) {
-    if (action === 'newRegistry') {
+    if (action === 'deleteRegistry') {
       this.setState({
         ...this.state,
-        selectedValues: rowData,
         openDialog: !this.state.openDialog,
         action,
       });
     } else {
       this.setState({
         ...this.state,
+        selectedValues: rowData,
         openDialog: !this.state.openDialog,
         action,
       });
