@@ -17,10 +17,11 @@ export default function validateUserData({
   cidadeNascimento = '',
   email = '',
   telefone = '',
-  empresas = '',
+  empresas = [],
   id,
 }) {
-  if (!nome || !email || !empresas.length) {
+  console.log(empresas);
+  if (!nome || !email || !Array.isArray(empresas)) {
     sendAlert(0, 'Por favor, preencha todos os campos!');
     return false;
   }
