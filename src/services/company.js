@@ -41,3 +41,16 @@ export async function newCompany({ company, showAlert }) {
     return false;
   }
 }
+
+export async function deleteCompany({ showAlert, id }) {
+  try {
+    const {
+      data: { mensagem },
+    } = await api.delete(`/empresa/id.php/${id}`);
+    if (showAlert) sendAlert(1, mensagem);
+    return true;
+  } catch (error) {
+    if (showAlert) sendAlert(0, error.response.data.mensagem);
+    return false;
+  }
+}

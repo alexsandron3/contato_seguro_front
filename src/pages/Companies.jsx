@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import Content from '../components/Content';
 import Table from '../components/Table';
 import api from '../services/api';
-import sendAlert from '../utils/sendAlert';
 import validateCompanyData from '../utils/validateCompanyData';
 import FormContext from '../context/FormProvider';
 import FormDialog from '../components/FormDialog';
 import FormCompany from '../components/FormCompany';
-import { editCompany, newCompany } from '../services/company';
+import { editCompany, newCompany, deleteCompany } from '../services/company';
+import ConfirmationDialog from '../components/ConfirmationDialog';
 
 export const companyColumns = [
   {
@@ -97,21 +97,18 @@ export default class Companies extends Component {
       }
     }
   }
-  async deleteRegistry(deletedRow, resolve, reject) {
-    try {
-      const {
-        data: { mensagem },
-      } = await api.delete(`/empresa/id.php/${deletedRow.id}`);
-      this.setState({
-        empresas: this.state.empresas.filter(
-          (empresa) => empresa.id !== deletedRow.id,
-        ),
+  async deleteRegistry() {
+    const { selectedValues, clearFormData, setState } = this.context;
+    const isUserDeleted = await deleteCompany({
+      id: selectedValues.id,
+      showAlert: true,
+    });
+    if (isUserDeleted) {
+      setState({
+        openDeleteDialog: false,
       });
-      sendAlert(1, mensagem);
-      resolve();
-    } catch (error) {
-      sendAlert(0, error.response.data.mensagem);
-      resolve();
+      await this.listAllCompanies();
+      clearFormData();
     }
   }
   render() {
@@ -123,6 +120,8 @@ export default class Companies extends Component {
       handleSelectedCompanies,
       selectedValues,
       action,
+      openDeleteDialog,
+      setOpenConfirmationDialog,
     } = this.context;
     return (
       <Grid
@@ -140,6 +139,7 @@ export default class Companies extends Component {
               data={this.state.empresas}
               title="Lista de empresas"
               openForm={setDialogOpen}
+              setOpenConfirmationDialog={setOpenConfirmationDialog}
             />
           </Content>
         </Grid>
@@ -152,6 +152,13 @@ export default class Companies extends Component {
           clearFormData={clearFormData}
           handleSelectedCompanies={handleSelectedCompanies}
           Form={FormCompany}
+        />
+        <ConfirmationDialog
+          title="Você deseja deletar este registro?"
+          text="Ao confirmar, esta operação não poderá ser desfeita"
+          open={openDeleteDialog}
+          setOpen={setOpenConfirmationDialog}
+          action={this[action]}
         />
       </Grid>
     );
