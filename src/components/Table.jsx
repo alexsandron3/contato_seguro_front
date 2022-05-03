@@ -34,7 +34,8 @@ export default class Table extends Component {
           {
             icon: () => <EditIcon />,
             tooltip: 'Editar registro',
-            onClick: (props, rowData) => this.props.openForm('editRegistry'),
+            onClick: (props, rowData) =>
+              this.props.openForm('editRegistry', rowData),
           },
           {
             icon: () => <DeleteIcon />,
