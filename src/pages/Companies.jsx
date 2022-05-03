@@ -56,9 +56,7 @@ export default class Companies extends Component {
       const {
         data: { dados },
       } = await api.get('/empresa/');
-      this.setState({ empresas: dados }, () => {
-        console.log(this.state.empresas);
-      });
+      this.setState({ empresas: dados });
     } catch (error) {
       console.log(error);
     }

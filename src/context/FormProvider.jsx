@@ -71,7 +71,6 @@ export class FormProvider extends Component {
     });
   }
   clearFormData() {
-    console.log('clearFormData');
     this.setState({
       ...this.state,
       selectedValues: {},

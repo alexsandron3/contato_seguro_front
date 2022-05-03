@@ -37,7 +37,6 @@ export async function newCompany({ company, showAlert }) {
     if (showAlert) sendAlert(1, mensagem);
     return true;
   } catch (error) {
-    console.log(error, company);
     if (showAlert) sendAlert(0, error.response.data.mensagem);
     return false;
   }
